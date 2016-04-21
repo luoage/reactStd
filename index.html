@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>React Tutorial</title>
+	<script src="build/react.js"></script>
+	<script src="build/react-dom.js"></script>
+	<script src="build/browser.min.js"></script>
+	<!--
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+	-->
+  </head>
+  <body>
+    <div id="container">
+	</div>
+    <script>
+		var	TableRowTr = React.createClass({
+			render : function(){
+				var product = this.props.product,
+					attr = product.stocked ? null : {style:{color:'red'}};
+
+				return React.DOM.tr(null,
+					React.DOM.td(attr, product.name),
+					React.DOM.td(null, product.price)
+				);
+			}
+		});
+
+		var TableRow = React.createClass({
+			render : function(){
+				var tr = [];
+
+				(this.props.products||[]).forEach(function(item){
+					tr.push(
+						React.createElement(TableRowTr, {product:item})
+					);
+				});
+
+				var tbody = React.DOM.tbody.apply(React.DOM, [null].concat(tr)),
+					thead = React.DOM.thead(null, 
+						React.DOM.tr(null,
+							React.DOM.th(null, 'Name'),
+							React.DOM.th(null, 'Price')
+						)
+					);
+
+				return React.DOM.table(null, thead, tbody);
+			}
+		});
+
+		var CheckBox = React.createClass({
+			getInitialState : function(){
+				return {checked : false};
+			},
+			onChange : function(e){
+				var checkBox = e.target || e.srcElement,
+					isChecked = checkBox.checked;
+
+				this.props.handleChecked(isChecked);
+				this.setState({checked : isChecked});
+			},
+			eCheckBox : function(){
+				return React.DOM.input({
+					type:'checkbox',
+					onChange : this.onChange,
+					checked : this.state.checked
+				});
+			},
+			render : function(){
+				return React.DOM.label({placeholder:'Search...'},
+					this.eCheckBox(),
+					'Only show products in stock.'
+				);
+			}
+		});
+
+		var Search = React.createClass({
+			getInitialState : function(){
+				return {};
+			},
+			handleChange : function(e){
+				var input = e.target || e.srcElement,
+					value = input.value;
+
+				this.props.handleUserInput(value);
+				this.setState({value : value});
+			},
+			render : function(){
+				return React.DOM.input({
+					placeholder:'Search...',
+					onChange:this.handleChange,
+					value : this.state.value || ''
+				});
+			}
+		});
+
+		var Production = React.createClass({
+			getInitialState : function(){
+				this.newProducts();
+				return {products : this.props.products};
+			},
+			handleUserInput : function(inputValue, isChecked){
+				inputValue = inputValue || '';
+
+				this.userInput(inputValue, isChecked);
+			},
+			userInput : function(inputValue, isChecked){
+				var res = this.newProducts(inputValue, isChecked);
+
+				this.setState(res);
+			},
+			newProducts : function(inputValue, isChecked){
+				var newProducts = [];
+
+				this.props.products.forEach(function(item){
+					if(new RegExp(inputValue, 'i').test(item.name)){
+						if(isChecked ? (isChecked && item.stocked) : true){
+							newProducts.push(item);
+						}
+					}
+				});
+
+				return {products : newProducts, inputValue : inputValue};
+			},
+			handleChecked : function(isChecked){
+				this.userInput(this.state.inputValue, isChecked);
+			},
+			render : function(){
+				return React.DOM.div(null,
+					React.createElement(Search, {
+						handleUserInput : this.handleUserInput
+					}),
+					React.createElement(CheckBox, {
+						handleChecked : this.handleChecked
+					}),
+					React.createElement(TableRow, {products : this.state.products})
+				);
+			}
+		});
+
+		var products = [
+				{category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football'},
+				{category: 'Sporting Goods', price: '$9.99', stocked: true, name: 'Baseball'},
+				{category: 'Sporting Goods', price: '$29.99', stocked: false, name: 'Basketball'},
+				{category: 'Electronics', price: '$99.99', stocked: true, name: 'iPod Touch'},
+				{category: 'Electronics', price: '$399.99', stocked: false, name: 'iPhone 5'},
+				{category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7'}
+			];
+
+		ReactDOM.render(
+			React.createElement(Production, {products : products}),
+			document.getElementById('container')
+		);
+
+    </script>
+  </body>
+</html>
