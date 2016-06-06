@@ -1,0 +1,37 @@
+<!-- t3.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>React Tutorial</title>
+	<script src="build/react.js"></script>
+	<script src="build/react-dom.js"></script>
+  </head>
+  <body>
+    <div id="example"></div>
+    <script>
+		var Div = React.createClass({
+			render : function(){
+				var vDom = React.DOM.div(
+						{
+							style:{
+								backgroundColor:'red'
+							}
+						},
+						'first Element',
+						React.createElement(Input),
+						React.createElement(Input)
+					);
+
+				return vDom;
+			}
+		});
+
+		ReactDOM.render(
+			React.createElement(Div),
+			document.getElementById('example')
+		);
+
+    </script>
+  </body>
+</html>

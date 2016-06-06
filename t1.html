@@ -1,4 +1,4 @@
-<!-- index.html -->
+<!-- t1.html -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -6,18 +6,10 @@
     <title>React Tutorial</title>
 	<script src="build/react.js"></script>
 	<script src="build/react-dom.js"></script>
-	<script src="build/browser.min.js"></script>
-	<!--
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-dom.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
-	-->
   </head>
   <body>
     <div id="example"></div>
-    <script type="text/babel">
+    <script>
 		var LikeButton = React.createClass({
 		  getInitialState: function() {
 			return {liked: false};
@@ -31,83 +23,8 @@
 
 		  }
 		});
-		/*
 		ReactDOM.render(
 			React.createElement(LikeButton),
-			document.getElementById('example')
-		);
-		*/
-
-		//------------------------------------------------------
-		var Input = React.createClass({
-			getInitialState: function() {
-				return {value: 'Hell'};
-			},
-			handleChange: function(event) {
-				this.setState({value: event.target.value.substr(0, 4)});
-			},
-			render: function() {
-				return React.DOM.input({type:'text', value:this.state.value, onChange:this.handleChange});
-			}
-		});
-
-		/* input标签
-		ReactDOM.render(
-			React.createElement(Input),
-			document.getElementById('example')
-		);
-		*/
-
-		var Div = React.createClass({
-			render : function(){
-				var vDom = React.DOM.div(
-						{
-							style:{
-								backgroundColor:'red'
-							}
-						},
-						'first Element',
-						React.createElement(Input),
-						React.createElement(Input)
-					);
-
-				return vDom;
-			}
-		});
-
-		/*
-		ReactDOM.render(
-			React.createElement(Div),
-			document.getElementById('example')
-		);
-		*/
-
-		var Table = React.createClass({
-			eTr : function(){
-
-				var aTd = [], i=0;
-
-				for(;i<9;i++){
-					aTd.push(React.DOM.td(null, i));
-				}
-
-				return React.DOM.tr.apply(React.DOM,
-					//React.DOM.td({}, 222)
-				[{}].concat(aTd)
-				);
-			},
-			eTbody : function(){
-				var aTbody = React.DOM.tbody(null, this.eTr() );
-
-				return aTbody;
-			},
-			render : function(){
-				return React.DOM.table(null, this.eTbody());
-			}
-		});
-
-		ReactDOM.render(
-			React.createElement(Table),
 			document.getElementById('example')
 		);
     </script>
