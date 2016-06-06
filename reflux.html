@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>reflux</title>
+	<script src="bower_components/es5-shim/es5-shim.js"></script>
+	<script src="bower_components/react/react.js"></script>
+	<script src="bower_components/react/react-dom.js"></script>
+	<script src="bower_components/reflux/dist/reflux.js"></script>
+	<script src="bower_components/jquery/dist/jquery.js"></script>
+  </head>
+  <body>
+
+    <div id="container">
+	</div>
+
+    <script>
+/*
+var Action = Reflux.createActions([
+	'addItem'
+]);
+
+var store = Reflux.createStore({
+	listenables : [Action],
+	onAddItem : function(model){
+		console.log(model);
+	}
+});
+
+Action.addItem({a:1});
+*/
+
+
+
+		var TodoActions = Reflux.createActions([
+			'addItem'
+		]);
+
+		var TodoStore = Reflux.createStore({
+			items: [1, 2],
+			listenables: TodoActions,
+			onAddItem: function (model) {
+				//$.post('/server/add', {data: model}, function (data) {
+				setTimeout(function(){
+					var data = 0;
+
+					this.items.unshift(data);
+					this.trigger(this.items);
+				}.bind(this), 0)
+				//}.bind(this));
+			}
+		});
+
+//console.log(TodoStore);
+
+		var TodoComponent = React.createClass({
+    		mixins: [Reflux.listenTo(TodoStore,'onStatusChange')],
+			getInitialState: function () {
+				return {list:[]};
+			},
+			onStatusChange: function () {
+				this.setState({list: TodoStore.items});
+			},
+			componentDidMount : function(){
+				TodoActions.addItem();
+			},
+			render: function (){
+				var state = this.state;
+
+				console.log(state, '为什么要执行两遍？');
+
+				var p = function(){
+					var pArr = [];
+
+					state.list.forEach(function(item){
+						pArr.push(React.DOM.p(null, item));
+					});
+
+					return pArr;
+				}
+
+				return React.DOM.div.apply(React.DOM, [{}].concat(p()));
+			}
+		});
+
+		ReactDOM.render( React.createElement(TodoComponent), document.getElementById('container'));
+    </script>
+  </body>
+</html>
